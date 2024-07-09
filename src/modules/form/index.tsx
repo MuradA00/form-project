@@ -2,19 +2,21 @@ import { useForm } from "react-hook-form";
 import { formErrorMessageStyles, formItemStyles, inputClassName } from "../../constants";
 import { CustomSelect } from "../../components/CustomSelect";
 import { useState } from "react";
+import { useUser } from "../../services/userApi";
 
-interface RegisterFormData {
+export interface RegisterFormData {
   userName: string;
   userEmail: string;
   phoneNumber: string;
 }
 
 export const RegisterForm = () => {
+  const {sendUserData} = useUser();
   const [selectedOption, setSelectedOption] = useState('');
   const {
     register,
-    clearErrors,
     handleSubmit, 
+    trigger,
     formState: {errors}
   } = useForm({
     defaultValues: {
@@ -31,8 +33,7 @@ export const RegisterForm = () => {
 
   const onSubmit = (data: RegisterFormData) => {
     if (selectedOption) {
-      alert([data.userName, data.userEmail, data.phoneNumber]);
-      window.location.reload();
+      sendUserData(data).then((response) => console.log(response.data)).catch(error => console.log(error));
     }
   }
   return (
@@ -48,7 +49,7 @@ export const RegisterForm = () => {
           className={inputClassName}
           {...register('userName', {
             required: 'Please enter your name',
-            onChange: () => clearErrors('root'),
+            onChange: () => trigger('userName'),
           })}
           name="userName" 
         />
@@ -66,7 +67,7 @@ export const RegisterForm = () => {
           className={inputClassName}
           {...register('userEmail', {
             required: 'Please enter your email address',
-            onChange: () => clearErrors('root'),
+            onChange: () => trigger('userEmail'),
             pattern: {
               value: /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/,
               message: 'Invalid email address',
@@ -91,7 +92,7 @@ export const RegisterForm = () => {
               value: /^(?:\+49|0)(?:\s?\d\s?){10,14}$/,
               message: 'Invalid phone number',
             },
-            onChange: () => clearErrors('root'),
+            onChange: () => trigger('phoneNumber'),
           })}
           name="phoneNumber"
         />

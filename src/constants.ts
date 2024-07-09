@@ -6,3 +6,4 @@ export const inputClassName = "min-h-[48px] rounded-md outline-none border-solid
 
 export const formErrorMessageStyles = 'text-red-500 text-sm font-medium';
 export const formItemStyles = 'flex flex-col gap-2';
+export const API_URL = 'https://list777.insanepinko.online';
